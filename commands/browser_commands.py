@@ -1,12 +1,13 @@
 import webbrowser
 
 from config import settings
+from commands.base_commands import BaseCommands
 
 DEFAULT_HOME_URL = 'https://google.com'
 DEFAULT_CURRENCY_URL = 'https://www.banki.ru/products/currency/cb/'
 
 
-class BrowserCommands:
+class BrowserCommands(BaseCommands):
     def __init__(self):
         browser = settings.get('browser')
         browser_path = settings.get('browser_path')
@@ -16,6 +17,11 @@ class BrowserCommands:
 
         self._home_url = settings.get('home_url', DEFAULT_HOME_URL)
         self._currency_url = settings.get('currency_url', DEFAULT_CURRENCY_URL)
+
+        self._command_dict = {
+            'открыть браузер': self.open_browser,
+            'курс валют': self.open_currency_page,
+        }
 
     def open_browser(self) -> None:
         self._browser.open_new(self._home_url)
