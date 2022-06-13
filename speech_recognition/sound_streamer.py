@@ -50,20 +50,20 @@ class SoundStreamer:
         return stream
 
     def _get_input_device_index(self, audio: pyaudio.PyAudio) -> int:
-        def _get_record_devices_dict():
-            info = audio.get_host_api_info_by_index(0)
-            numdevices = info.get('deviceCount')
-
-            device_name__index = {}
-            for i in range(0, numdevices):
-                if (audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
-                    name = audio.get_device_info_by_host_api_device_index(0, i).get('name')
-                    device_name__index[name] = i
-            return device_name__index
-
-        device_name__index = _get_record_devices_dict()
+        device_name__index = self._get_record_devices_dict(audio)
 
         if self._device_name:
             return device_name__index[self._device_name]
 
         return [value for value in device_name__index.values()][0]
+
+    def _get_record_devices_dict(self, audio: pyaudio.PyAudio):
+        info = audio.get_host_api_info_by_index(0)
+        numdevices = info.get('deviceCount')
+
+        device_name__index = {}
+        for i in range(0, numdevices):
+            if (audio.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
+                name = audio.get_device_info_by_host_api_device_index(0, i).get('name')
+                device_name__index[name] = i
+        return device_name__index

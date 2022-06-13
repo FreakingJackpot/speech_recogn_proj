@@ -11,5 +11,5 @@ class BaseCommands(metaclass=ABCMeta):
         return command_str in self._command_dict
 
     def execute_command(self, command_str: str) -> None:
-        command = self._command_dict.get(command_str)
+        command = self._command_dict[command_str]
         command()
