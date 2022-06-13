@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from commands.browser_commands import BrowserCommands
 from commands.os_commands import OsCommands
 from commands.base_commands import BaseCommands
@@ -5,7 +7,7 @@ from commands.base_commands import BaseCommands
 
 class CommandsRepository:
     def __init__(self):
-        self.commands_storages = (BrowserCommands(), OsCommands())
+        self.commands_storages: Tuple[BaseCommands] = (BrowserCommands(), OsCommands())
 
     def execute(self, command: str):
         commands = self._find_command_place(command)

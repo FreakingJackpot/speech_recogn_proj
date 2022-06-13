@@ -1,10 +1,6 @@
 from main_activity import MainActivity
 
 
-def main():
+if __name__ == '__main__':
     activity = MainActivity()
     activity.run()
-
-
-if __name__ == '__main__':
-    main()
