@@ -6,6 +6,7 @@ from dynaconf import Dynaconf
 from pyautogui import press, hotkey
 
 from config import settings
+from commands.base_commands import BaseCommands
 
 SHUTDOWN_COMMANDS = {
     'Windows': 'shutdown /s',
@@ -38,13 +39,24 @@ CALENDAR_HOTKEYS = {
 }
 
 
-class OsCommands:
+class OsCommands(BaseCommands):
     def __init__(self):
         self._platform = settings.get('platform', platform.system())
         self._volume_step = settings.get('volume_step', 20)
         self._calculator_command = settings.get('calculator_command', CALCULATOR_COMMANDS[self._platform])
         self._scissors_hotkey = self._get_scissors_hotkey(settings)
         self._calendar_hotkey = self._get_calendar_hotkey(settings)
+        self._command_dict = {
+            'выключить компьютер': self.shutdown,
+            'режим сна': self.suspend,
+            'увеличить громкость': self.volume_up,
+            'уменьшить громкость': self.volume_down,
+            'выключить звук': self.mute,
+            'включить звук': self.unmute,
+            'открыть ножницы': self.open_scissors,
+            'открыть календарь': self.open_calendar,
+            'открыть калькулятор': self.open_calculator,
+        }
 
     def _get_scissors_hotkey(self, settings_: Dynaconf) -> partial:
         scissors_hotkey_str = settings_.get('scissors_hotkey', '')
@@ -84,8 +96,8 @@ class OsCommands:
         subprocess.run(self._calculator_command)
 
     def open_scissors(self) -> None:
-        print(self._scissors_hotkey)
         self._scissors_hotkey()
 
     def open_calendar(self) -> None:
         self._calendar_hotkey()
+

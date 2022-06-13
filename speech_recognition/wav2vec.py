@@ -1,4 +1,8 @@
+import platform
+from winsound import Beep
+
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+from numpy import ndarray
 import torch
 
 from config import settings
@@ -13,9 +17,13 @@ class Wav2Vec:
         self._processor = Wav2Vec2Processor.from_pretrained(repository)
         self._model = Wav2Vec2ForCTC.from_pretrained(repository)
 
-        print('я запустилься!')
+        platform_ = settings.get('platform', platform.system())
+        if platform_ != 'Windows':
+            print('\a')
+        else:
+            Beep(2500, 3)
 
-    def array_to_text(self, audio_array) -> str:
+    def array_to_text(self, audio_array: ndarray) -> str:
         if not len(audio_array):
             return ""
 

@@ -1,12 +1,13 @@
 from queue import Queue
 from threading import Event
 
-import numpy as np
-
+from speech_recognition.audio_converter import AudioConverter
 from speech_recognition.wav2vec import Wav2Vec
 
 
 class SpeechRecognizer:
+    _converter = AudioConverter
+
     def __init__(self):
         self._wav2vec = Wav2Vec()
 
@@ -17,6 +18,10 @@ class SpeechRecognizer:
             if not sound_queue.empty():
                 audio_frames = sound_queue.get()
                 if audio_frames:
-                    audio_array = np.frombuffer(audio_frames, dtype=np.int16).astype(np.float32)
-                    text = self._wav2vec.array_to_text(audio_array)
+                    text = self._recognize(audio_frames)
                     result_queue.put(text)
+
+    def _recognize(self, audio_frames: bytes) -> str:
+        audio_array = self._converter.convert(audio_frames)
+        text = self._wav2vec.array_to_text(audio_array)
+        return text
